@@ -1,0 +1,71 @@
+---
+name:  ttestOS
+title: One Sample T-Test/One Sample Wilcoxon Test
+jrs:   '1.1'
+
+items:
+    - name:  ttestParOS
+      title: One Sample Test
+      type:  Table
+      description: the main result table for the parametric case
+      rows:  (xs)
+      columns:
+        - name:   var
+          title:  ''
+          type:   text
+          content: ($key)
+        - name:   testName
+          title:  'Test type'
+          type:   text
+        - name:   t
+          title:  'Statistic'
+          type:   number
+        - name:   crit
+          title:  'Critical value'
+          type:   number
+        - name:   df
+          type:   number
+        - name:   p
+          type:   number
+          format: zto,pvalue
+        - name:   mean
+          title:  'Mean'
+          type:   number
+
+    - name:  ttestNonparOS
+      title: One Sample Test
+      type:  Table
+      description: the main result table for the nonparametric case
+      rows:  (xs)
+      columns:
+        - name:   var
+          title:  ''
+          type:   text
+          content: ($key)
+        - name:   testName
+          title:  'Test type'
+          type:   text
+        - name:   t
+          title:  'Statistic'
+          type:   number
+        - name:   p
+          type:   number
+          format: zto,pvalue
+
+    - name:  normalityOS
+      title: Normality test (Shapiro-Wilk)
+      type:  Table
+      description: the results of the normality test
+      rows:  (xs)
+      columns:
+        - name:   var
+          title:  ''
+          type:   text
+          content: ($key)
+        - name:   w
+          title:  'W'
+          type:   number
+        - name:   p
+          type:   number
+          format: zto,pvalue
+

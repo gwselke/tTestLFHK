@@ -1,0 +1,47 @@
+title: Paired Samples T-Test
+name: ttestPS
+jus: '3.0'
+stage: 0
+compilerMode: tame
+children:
+  - type: VariableSupplier
+    persistentItems: true
+    stretchFactor: 1
+    children:
+      - type: TargetLayoutBox
+        label: Paired Variables
+        children:
+          - type: VariablesListBox
+            name: pairs
+            fullRowSelect: true
+            isTarget: true
+            columns:
+              - name: i1
+                stretchFactor: 1
+                template:
+                  type: VariableLabel
+              - name: i2
+                stretchFactor: 1
+                template:
+                  type: VariableLabel
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ComboBox
+        name: alternative
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: ComboBox
+        name: testType
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: TextBox
+        name: confLevel
+        format: number
+  - type: LayoutBox
+    margin: large
+    children:
+      - type: CheckBox
+        name: normalityTest

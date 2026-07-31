@@ -1,0 +1,83 @@
+---
+name:  ttestIS
+title: Independent Samples T-Test/Mann-Whitney U Test
+menuGroup: T_Test_LFHK
+version: '1.1.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+      description:
+          R: the data as a data frame
+
+    - name: deps
+      title: Dependent Variables
+      type: Variables
+      suggested:
+        - continuous
+      permitted:
+        - numeric
+      description:
+          R: a list of strings each specifying a dependent variable in `data`
+
+    - name: group
+      title: Grouping Variable
+      type: Variable
+      suggested:
+        - nominal
+      permitted:
+        - factor
+      description:
+          R: >
+            a string specifying the grouping variable in `data`; must have exactly
+            two levels
+
+    - name: alternative
+      title: Alternative hypothesis
+      type: List
+      options:
+        - title: 'Group 1 ≠ Group 2'
+          name:  two.sided
+        - title: 'Group 1 < Group 2'
+          name:  less
+        - title: 'Group 1 > Group 2'
+          name:  greater
+      default: two.sided
+      description:
+          R: >
+            `'Difference of means of the groups is different'`,
+            `'Mean of Group 1 is less than mean of Group 2'`, or
+            `'Mean of Group 1 is greater than mean of Group 2'`
+
+    - name:  testType
+      title: Type of test
+      type:  List
+      options:
+        - title: Parametric
+          name:  parametric
+        - title: Nonparametric
+          name:  nonparametric
+      default: parametric
+      description:
+          R: >
+            `'Parametric'` uses Student's t-test and Welch's t-test,
+            `'Nonparametric'` uses Mann-Whitney U test.
+
+    - name: confLevel
+      title: Confidence level (between 0 and 1)
+      type: Number
+      default: 0.95
+      min: 0
+      max: 1
+      description:
+          R: >
+            a number between 0 and 1 (default: 0.95), specifying the confidence
+            interval width
+
+    - name: normalityTest
+      title: Normality test
+      type: Bool
+      default: FALSE
+      description:
+          R: whether to perform tests for normality of the two distributions

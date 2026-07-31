@@ -1,0 +1,75 @@
+---
+name:  ttestOS
+title: One Sample T-Test/One Sample Wilcoxon Test
+menuGroup: T_Test_LFHK
+version: '1.1.0'
+jas: '1.2'
+
+options:
+    - name: data
+      type: Data
+      description:
+          R: the data as a data frame
+
+    - name: xs
+      title: Variables
+      type: Variables
+      suggested:
+        - continuous
+      permitted:
+        - numeric
+      description:
+          R: a list of strings each specifying a variable in `data`
+
+    - name: alternative
+      title: Alternative hypothesis
+      type: List
+      options:
+        - title: '≠ Test value'
+          name:  two.sided
+        - title: '< Test value'
+          name:  less
+        - title: '> Test value'
+          name:  greater
+      default: two.sided
+      description:
+          R: >
+            `'Mean not equal to test value'`, `'Mean less than test value'`, or `'Mean greater than test value'`
+
+    - name: mean
+      title: Test value
+      type: Number
+      default: 0
+      description:
+          R: The true value of the mean
+
+    - name:  testType
+      title: Type of test
+      type:  List
+      options:
+        - title: Parametric
+          name:  parametric
+        - title: Nonparametric
+          name:  nonparametric
+      default: parametric
+      description:
+          R: >
+            `'Parametric'` uses Student's t-test, `'Nonparametric'` uses Wilcoxon rank test.
+
+    - name: confLevel
+      title: Confidence level (between 0 and 1)
+      type: Number
+      default: 0.95
+      min: 0
+      max: 1
+      description:
+          R: >
+            a number between 0 and 1 (default: 0.95), specifying the confidence
+            interval width
+
+    - name: normalityTest
+      title: Normality test
+      type: Bool
+      default: FALSE
+      description:
+          R: whether to perform a test for normality of the distribution

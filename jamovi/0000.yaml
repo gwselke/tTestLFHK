@@ -1,0 +1,36 @@
+---
+title: T Test With A Special Twist From LFHK
+name: tTestLFHK
+version: 1.1.0
+jms: '1.0'
+authors:
+  - Gisbert W. Selke
+maintainer: Gisbert W. Selke <gwselke@gmx.net>
+date: '2026-07-31'
+type: R
+description: >
+  Just an ordinary t (and Wilcoxon and Mann-Whitney) test but also displaying
+  the critical value(s) and some other useful information and commentary.
+analyses:
+  - title: Independent Samples T-Test/Mann-Whitney U Test
+    name: ttestIS
+    ns: tTestLFHK
+    menuGroup: T_Test_LFHK
+    menuTitle: Independent Samples T-Test/Mann-Whitney U Test
+    category: analyses
+  - title: Paired Samples T-Test/Wilcoxon Signed Rank Test
+    name: ttestPS
+    ns: tTestLFHK
+    menuGroup: T_Test_LFHK
+    menuTitle: Paired Samples T-Test/Wilcoxon Signed Rank Test
+    category: analyses
+  - title: One Sample T-Test/One Sample Wilcoxon Test
+    name: ttestOS
+    ns: tTestLFHK
+    menuGroup: T_Test_LFHK
+    menuTitle: One Sample T-Test/One Sample Wilcoxon Test
+    category: analyses
+usesNative: true
+minApp: 1.0.8
+
+...

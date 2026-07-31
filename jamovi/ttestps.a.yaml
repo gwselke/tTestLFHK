@@ -1,0 +1,72 @@
+---
+name:  ttestPS
+title: Paired Samples T-Test/Wilcoxon Signed Rank Test
+menuGroup: T_Test_LFHK
+version: '1.1.0'
+jas: '1.2'
+
+options:
+    - name:  data
+      type:  Data
+      description:
+          R: the data as a data frame
+
+    - name:  pairs
+      title: Paired Variables
+      # when the UI is reasonably stable, set compilerMode to tame and persistentItems to true in the u.yaml file!
+      type:  Pairs
+      suggested:
+        - continuous
+      permitted:
+        - numeric
+      description:
+          R: pairs of variable in `data' representing the paired measurements; in R, a list of lists
+
+    - name:  alternative
+      title: Alternative hypothesis
+      type:  List
+      options:
+        - title: 'Measurement 1 ≠ Measurement 2'
+          name:  two.sided
+        - title: 'Measurement 1 < Measurement 2'
+          name:  less
+        - title: 'Measurement 1 > Measurement 2'
+          name:  greater
+      default: two.sided
+      description:
+          R: >
+            `'Mean of differences of the two measurements is not 0'`,
+            `'Mean of Measurement 1 minus Measurement 2 is less than 0'`, or
+            `'Mean of Measurement 1 minus Measurement 2 is greater than 0'`
+
+    - name:  testType
+      title: Type of test
+      type:  List
+      options:
+        - title: Parametric
+          name:  parametric
+        - title: Nonparametric
+          name:  nonparametric
+      default: parametric
+      description:
+          R: >
+            `'Parametric'` uses Student's t-test,
+            `'Nonparametric'` uses Mann-Whitney U test.
+
+    - name:  confLevel
+      title: Confidence level (between 0 and 1)
+      type:  Number
+      default: 0.95
+      min: 0
+      max: 1
+      description:
+          R: >
+            a number between 0 and 1 (default: 0.95), specifying the confidence
+            interval width
+
+    - name: normalityTest
+      title: Normality test
+      type: Bool
+      default: FALSE
+      description:
+          R: whether to perform a test for normality of the distribution of the differences

@@ -1,0 +1,11 @@
+Package: tTestLFHK
+Type: Package
+Title: T Test With A Special Twist From LFHK
+Version: 1.1.0
+Author: Gisbert W. Selke
+Maintainer: Gisbert W. Selke <gwselke@gmx.net>
+Description: Just an ordinary t (and Wilcoxon and Mann-Whitney) test but also displaying the critical value(s) and more.
+License: Artistic License 2.0 (https://opensource.org/license/Artistic-2.0)
+Encoding: UTF-8
+LazyData: true
+Imports: jmvcore (>= 0.8.5), R6, car

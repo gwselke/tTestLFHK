@@ -1,0 +1,109 @@
+---
+name:  ttestIS
+title: Independent Samples T-Test/Mann-Whitney U Test
+jrs:   '1.1'
+
+items:
+    - name:  ttestParIS
+      title: Independent Samples Test
+      type: Table
+      description: the main result table for the parametric case
+      rows:  0
+      columns:
+        - name:   var
+          title:  ''
+          type:   text
+          combineBelow: true
+          content: ($key)
+        - name:   testName
+          title:  'Test type'
+          type:   text
+        - name:   t
+          title:  'Statistic'
+          type:   number
+        - name:   crit
+          title:  'Critical value'
+          type:   number
+        - name:   df
+          type:   number
+        - name:   p
+          type:   number
+          format: zto,pvalue
+        - name:   mean1
+          title:  Mean 1
+          combineBelow: true
+          type:   number
+        - name:   mean2
+          title:  Mean 2
+          combineBelow: true
+          type:   number
+        - name:   meandiff
+          title:  Difference in means
+          combineBelow: true
+          type:   number
+
+    - name:  ttestNonparIS
+      title: Independent Samples Test
+      type: Table
+      description: the main result table for the nonparametric case
+      rows:  0
+      columns:
+        - name:   var
+          title:  ''
+          type:   text
+          combineBelow: true
+          content: ($key)
+        - name:   testName
+          title:  'Test type'
+          type:   text
+        - name:   t
+          title:  'Statistic'
+          type:   number
+        - name:   p
+          type:   number
+          format: zto,pvalue
+
+    - name:  homogeneityIS
+      title: Homogeneity of Variances Test (Levene)
+      type:  Table
+      description: the Levene results, only used in the parametric case
+      rows:  (deps)
+      columns:
+        - name:   var
+          title:  ''
+          type:   text
+          combineBelow: true
+          content: ($key)
+        - name:   f
+          title:  'F'
+          type:   number
+        - name:   df
+          title:  'df'
+          type:   number
+        - name:   df2
+          title:  'df2'
+          type:   number
+        - name:   p
+          type:   number
+          format: zto,pvalue
+
+    - name:  normalityIS
+      title: Normality test (Shapiro-Wilk)
+      type:  Table
+      description: the results of the normality test for the difference
+      rows:  0
+      columns:
+        - name:   var
+          title:  ''
+          type:   text
+          combineBelow: true
+        - name:   group
+          title:  ''
+          type:   text
+        - name:   w
+          title:  'W'
+          type:   number
+        - name:   p
+          type:   number
+          format: zto,pvalue
+

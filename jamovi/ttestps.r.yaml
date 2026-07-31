@@ -1,0 +1,77 @@
+---
+name:  ttestPS
+title: Paired Samples T Test/Wilcoxon Signed Rank Test
+jrs:   '1.1'
+
+items:
+    - name:  ttestParPS
+      title: Paired Samples Test
+      type:  Table
+      description: the main result table for the parametric case
+      rows:  (pairs)
+      columns:
+        - name:   x
+          title:  ''
+          type:   text
+        - name:   y
+          title:  ''
+          type:   text
+        - name:   testName
+          title:  'Test type'
+          type:   text
+        - name:   t
+          title:  'Statistic'
+          type:   number
+        - name:   crit
+          title:  'Critical value'
+          type:   number
+        - name:   df
+          type:   number
+        - name:   p
+          type:   number
+          format: zto,pvalue
+        - name:   mean
+          title:  'Mean Difference'
+          type:   number
+
+    - name:  ttestNonparPS
+      title: Paired Samples Test
+      type:  Table
+      description: the main result table for the nonparametric case
+      rows:  (pairs)
+      columns:
+        - name:   x
+          title:  ''
+          type:   text
+        - name:   y
+          title:  ''
+          type:   text
+        - name:   testName
+          title:  'Test type'
+          type:   text
+        - name:   t
+          title:  'Statistic'
+          type:   number
+        - name:   p
+          type:   number
+          format: zto,pvalue
+
+    - name:  normalityPS
+      title: Normality test (Shapiro-Wilk) for differences
+      type:  Table
+      description: the results of the normality test for the differences
+      rows:  (pairs)
+      columns:
+        - name:   x
+          title:  ''
+          type:   text
+        - name:   y
+          title:  ''
+          type:   text
+        - name:   w
+          title:  'W'
+          type:   number
+        - name:   p
+          type:   number
+          format: zto,pvalue
+
