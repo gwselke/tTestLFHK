@@ -37,7 +37,7 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         )
 
         descr <- paste( 'Alternative hypothesis: difference of means',
-                        if ( self$options$alternative=='two.sided' ) 'not equal 0' else paste( self$options$alternative, 'than 0' )
+                        if ( self$options$alternative=='two.sided' ) 'not equal to 0' else paste( self$options$alternative, 'than 0' )
                       )
         tableT$setNote( 'althyp', descr, init=TRUE )
       }

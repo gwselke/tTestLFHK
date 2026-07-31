@@ -35,9 +35,9 @@ ttestPSClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                         )
 
         descr <- paste( 'Alternative hypothesis: mean of the differences',
-                        if ( self$options$alternative=='two.sided' ) 'not equal 0' else paste( self$options$alternative, 'than 0' )
+                        if ( self$options$alternative=='two.sided' ) 'not equal to 0' else paste( self$options$alternative, 'than 0' )
                       )
-        tableT$setNote( 'althyp',    descr, init=TRUE )
+        tableT$setNote( 'althyp', descr, init=TRUE )
       }
 
       tableS$setNote( 'normality', 'A low p-value suggests a violation of the assumption of normality.', init=TRUE )
@@ -141,7 +141,8 @@ ttestPSClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
           } else {
             # If normality is not violated, possibly add a marker for significant result:
             if ( results$p.value < 1-self$options$confLevel ) {
-              tableT$addSymbol( rowKey=thisx, col=1, symbol='*' )
+              tableT$addSymbol( rowKey=key, col=1, symbol='*' )
+              tableT$addSymbol( rowKey=key, col=2, symbol='*' )
               note_sig_ct <- note_sig_ct + 1
             }
           }

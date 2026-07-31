@@ -2,7 +2,8 @@ title: One Sample T-Test/One Sample Wilcoxon Test
 name: ttestOS
 jus: '3.0'
 stage: 0
-compilerMode: aggressive
+# compilerMode: aggressive
+compilerMode: tame
 children:
   - type: VariableSupplier
     persistentItems: false
@@ -16,12 +17,13 @@ children:
             isTarget: true
   - type: LayoutBox
     margin: large
+    style: inline
     children:
       - type: ComboBox
         name: alternative
-  - type: LayoutBox
-    margin: large
-    children:
+  #- type: LayoutBox
+  #  margin: large
+  #  children:
       - type: TextBox
         name: mean
         format: number

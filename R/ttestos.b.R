@@ -34,10 +34,10 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
                         )
 
         descr <- paste( 'Alternative hypothesis: mean ',
-                        if ( self$options$alternative=='two.sided' ) 'not equal' else paste( self$options$alternative, 'than' ),
+                        if ( self$options$alternative=='two.sided' ) 'not equal to' else paste( self$options$alternative, 'than' ),
                         self$options$mean
                       )
-        tableT$setNote( 'althyp',    descr, init=TRUE )
+        tableT$setNote( 'althyp', descr, init=TRUE )
       }
 
       tableS$setNote( 'normality', 'A low p-value suggests a violation of the assumption of normality.', init=TRUE )
