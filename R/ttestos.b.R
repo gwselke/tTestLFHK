@@ -42,7 +42,7 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
       }
 
       tableS$setNote( 'normality', 'Null hypothesis: the data come from a normal (i.e. Gaussian) distribution. 
-                     If a p-value is smaller than the significance level, we reject this H0.', init=TRUE )
+                     If the p-value is smaller than the significance level, we reject this H0.', init=TRUE )
 
       self$results$ttestParOS$setVisible(isParametric)
       self$results$ttestNonparOS$setVisible(!isParametric)
