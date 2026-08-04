@@ -36,13 +36,23 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                           type       = 'number'
                         )
 
-        descr <- paste( 'Alternative hypothesis: difference of means',
+        tableT$setNote( 'nullhyp', 'Null hypothesis: the difference of means between the groups in the population is equal to 0', init=TRUE )
+
+        descr <- paste( 'Alternative hypothesis: the difference of means between the groups in the population is',
                         if ( self$options$alternative=='two.sided' ) 'not equal to 0' else paste( self$options$alternative, 'than 0' )
                       )
         tableT$setNote( 'althyp', descr, init=TRUE )
       }
-      tableL$setNote( 'homogeneity', 'A low p-value suggests a violation of the assumption of equal variances.', init=TRUE )
-      tableS$setNote( 'normality',   'A low p-value suggests a violation of the assumption of normality.',       init=TRUE )
+
+      descr <- paste0( 'Null hypothesis (H0): the distributions in the groups have equal variances.\n',
+                       'If the p-value is smaller than the significance level, we reject this H0.'
+                     )
+      tableL$setNote( 'homogeneity', descr, init=TRUE )
+
+      descr <- paste0( 'Null hypothesis (H0): the data for each group in the population come from a normal (i.e. Gaussian) distribution.\n',
+                       'If the p-value is smaller than the significance level, we reject this H0.'
+                     )
+      tableS$setNote( 'normality', descr, init=TRUE )
 
       self$results$ttestParIS$setVisible(isParametric)
       self$results$ttestNonparIS$setVisible(!isParametric)

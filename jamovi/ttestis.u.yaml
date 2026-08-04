@@ -2,7 +2,8 @@ title: Independent Samples T-Test/Mann-Whitney U Test
 name: ttestIS
 jus: '3.0'
 stage: 0
-compilerMode: aggressive
+# compilerMode: aggressive
+compilerMode: tame
 children:
   - type: VariableSupplier
     persistentItems: false
@@ -33,10 +34,13 @@ children:
         name: testType
   - type: LayoutBox
     margin: large
+    style: inline
     children:
       - type: TextBox
         name: confLevel
         format: number
+      - type: Label
+        label: Confidence level = 1 - significance level
   - type: LayoutBox
     margin: large
     children:

@@ -33,14 +33,18 @@ ttestPSClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                           superTitle = superTitleText,
                           type       = 'number'
                         )
+        tableT$setNote( 'nullhyp', 'Null hypothesis: the mean of the differences in the population is equal to 0', init=TRUE )
 
-        descr <- paste( 'Alternative hypothesis: mean of the differences',
+        descr <- paste( 'Alternative hypothesis: the mean of the differences in the population is',
                         if ( self$options$alternative=='two.sided' ) 'not equal to 0' else paste( self$options$alternative, 'than 0' )
                       )
         tableT$setNote( 'althyp', descr, init=TRUE )
       }
 
-      tableS$setNote( 'normality', 'A low p-value suggests a violation of the assumption of normality.', init=TRUE )
+      descr <- paste0( 'Null hypothesis (H0): the differences of the pairs come from a normal (i.e. Gaussian) distribution.\n',
+                       'If the p-value is smaller than the significance level, we reject this H0.'
+                     )
+      tableS$setNote( 'normality', descr, init=TRUE )
 
       self$results$ttestParPS$setVisible(isParametric)
       self$results$ttestNonparPS$setVisible(!isParametric)

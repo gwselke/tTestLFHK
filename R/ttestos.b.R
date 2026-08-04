@@ -32,17 +32,20 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
                           superTitle  = superTitleText,
                           type        = 'number'
                         )
-        descr <- paste( 'Null hypothesis: population mean equal to', self$options$mean)
-        tableT$setNote( 'nullhyp', descr, init=TRUE )
-        descr <- paste( 'Alternative hypothesis: population mean ',
+
+        tableT$setNote( 'nullhyp', paste( 'Null hypothesis: the population mean is equal to', self$options$mean ), init=TRUE )
+
+        descr <- paste( 'Alternative hypothesis: the population mean is',
                         if ( self$options$alternative=='two.sided' ) 'not equal to' else paste( self$options$alternative, 'than' ),
                         self$options$mean
                       )
         tableT$setNote( 'althyp', descr, init=TRUE )
       }
 
-      tableS$setNote( 'normality', 'Null hypothesis: the data come from a normal (i.e. Gaussian) distribution. 
-                     If the p-value is smaller than the significance level, we reject this H0.', init=TRUE )
+      descr <- paste0( 'Null hypothesis (H0): the data come from a normal (i.e. Gaussian) distribution.\n',
+                       'If the p-value is smaller than the significance level, we reject this H0.'
+                     )
+      tableS$setNote( 'normality', descr, init=TRUE )
 
       self$results$ttestParOS$setVisible(isParametric)
       self$results$ttestNonparOS$setVisible(!isParametric)

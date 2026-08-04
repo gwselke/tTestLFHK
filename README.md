@@ -23,7 +23,7 @@ Or you can use the pre-compiled .jmo file provided here for "side-loading".
 It has been prepared using jamovi 2.7.38 (solid) and should run on Windows
 systems only.
 
-For installation:
+For sideloading installation:
 
 1. Start jamovi.
 2. If you have a previous version of this module installed, be sure to remove

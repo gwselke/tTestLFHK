@@ -21,9 +21,6 @@ children:
     children:
       - type: ComboBox
         name: alternative
-  #- type: LayoutBox
-  #  margin: large
-  #  children:
       - type: TextBox
         name: mean
         format: number
@@ -34,10 +31,13 @@ children:
         name: testType
   - type: LayoutBox
     margin: large
+    style: inline
     children:
       - type: TextBox
         name: confLevel
         format: number
+      - type: Label
+        label: Confidence level = 1 - significance level
   - type: LayoutBox
     margin: large
     children:
