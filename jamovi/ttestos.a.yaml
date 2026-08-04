@@ -57,7 +57,7 @@ options:
             `'Parametric'` uses Student's t-test, `'Nonparametric'` uses Wilcoxon rank test.
 
     - name: confLevel
-      title: Confidence level (between 0 and 1)
+      title: Confidence level (between 0 and 1; confidence level = 1 - significance level)
       type: Number
       default: 0.95
       min: 0
