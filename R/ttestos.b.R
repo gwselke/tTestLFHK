@@ -69,7 +69,7 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
         # for all chosen variables, calculate the appropriate test, including Shapiro-Wilks, and add a line to the result table
 
         x <- jmvcore::toNumeric( self$data[[thisx]] )
-        if ( is.factor( x ) ) jmvcore::reject( paste( 'Cannot run test on factor variable', thisx ) )
+        if ( is.factor(x) ) jmvcore::reject( paste( 'Cannot run test on grouping variable', thisx ) )
 
         if (isParametric) {
 

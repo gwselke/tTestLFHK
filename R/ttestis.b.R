@@ -78,7 +78,12 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       if ( is.null(grp) ) return( )
 
       grplevels    <- levels( data[,grp] )
-      if ( length(grplevels) != 2 ) jmvcore::reject( paste( 'Factor variable', grp, 'must have exactly 2 levels' ) )
+      if ( length(grplevels) != 2 ) {
+        msg = paste( 'Grouping variable', grp, 'must have exactly 2 different values.',
+                     'Consider going to Data -> Filter to include only 2 groups.'
+                   )
+        jmvcore::reject(msg)
+      }
 
       rowTNo       <- 0
       rowSNo       <- 0
@@ -91,7 +96,7 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
         x <- jmvcore::toNumeric( data[ data[,grp]==grplevels[1], dep ] )
         y <- jmvcore::toNumeric( data[ data[,grp]==grplevels[2], dep ] )
-        if ( is.factor(x) ) jmvcore::reject( paste( 'Cannot run test on factor variable', dep ) )
+        if ( is.factor(x) ) jmvcore::reject( paste( 'Cannot run test on grouping variable', dep ) )
 
         if (isParametric) {
 

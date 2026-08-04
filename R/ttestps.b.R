@@ -75,8 +75,8 @@ ttestPSClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
         x <- jmvcore::toNumeric( self$data[[xname]] )
         y <- jmvcore::toNumeric( self$data[[yname]] )
-        if ( is.factor( x ) ) jmvcore::reject( paste( 'Cannot run test on factor variable', xname ) )
-        if ( is.factor( y ) ) jmvcore::reject( paste( 'Cannot run test on factor variable', yname ) )
+        if ( is.factor(x) ) jmvcore::reject( paste( 'Cannot run test on grouping variable', xname ) )
+        if ( is.factor(y) ) jmvcore::reject( paste( 'Cannot run test on grouping variable', yname ) )
 
         if (isParametric) {
 
