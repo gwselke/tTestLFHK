@@ -32,7 +32,8 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
                           superTitle  = superTitleText,
                           type        = 'number'
                         )
-
+        descr <- paste( 'Null hypothesis: mean equal to', self$options$mean)
+        tableT$setNote( 'nullhyp', descr, init=TRUE )
         descr <- paste( 'Alternative hypothesis: mean ',
                         if ( self$options$alternative=='two.sided' ) 'not equal to' else paste( self$options$alternative, 'than' ),
                         self$options$mean
