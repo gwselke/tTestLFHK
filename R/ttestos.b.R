@@ -1,5 +1,9 @@
 # Implementation of the One Sample Test
 #
+# This file is part of the zTestLFHK jamoovi package.
+#
+# Copyright 2022--2026 Gisbert W. Selke <gwselke@github.com>
+#
 # This implementation is NOT optimized.
 # * It could make use of jamovi's clearWith feature (but it is a bit tricky to get this right for all cases).
 # * Shapiro-Wilks test could be cached (per variable), because it is independent of all other settings.
@@ -21,7 +25,11 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
 
       if (isParametric) {
         confLevel      <- self$options$confLevel
-        superTitleText <- paste0( 100*confLevel, '% Confidence Interval' )
+        tableT$addColumn( name        = 'mean_mu0',
+                          title       = 'Mean - μ<sub>0</sub>',
+                          type        = 'number'
+                        )
+        superTitleText <- paste0( 100*confLevel, '% Confidence Interval' )                        
         tableT$addColumn( name        = 'cilower',
                           title       = 'Lower',
                           superTitle  = superTitleText,
@@ -33,19 +41,19 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
                           type        = 'number'
                         )
 
-        tableT$setNote( 'nullhyp', paste( 'Null hypothesis: the population mean is equal to', self$options$mean ), init=TRUE )
+        tableT$setNote( 'nullhyp', paste( 'H<sub>0</sub>: μ =', self$options$mean, '(i.e. the population mean μ is equal to the hypothesized value μ<sub>0</sub>)' ), init=TRUE )
 
-        descr <- paste( 'Alternative hypothesis: the population mean is',
-                        if ( self$options$alternative=='two.sided' ) 'not equal to' else paste( self$options$alternative, 'than' ),
+        descr <- paste( 'H<sub>A</sub>:  μ',
+                        if ( self$options$alternative=='two.sided' ) '≠' else if ( self$options$alternative=='less' ) '<' else '>',
                         self$options$mean
                       )
         tableT$setNote( 'althyp', descr, init=TRUE )
+        tableT$setNote( 'significance', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
       }
 
-      descr <- paste0( 'Null hypothesis (H0): the data come from a normal (i.e. Gaussian) distribution.\n',
-                       'If the p-value is smaller than the significance level, we reject this H0.'
-                     )
-      tableS$setNote( 'normality', descr, init=TRUE )
+      
+      tableS$setNote( 'normality', 'H<sub>0</sub>: the data come from a normal (i.e. Gaussian) distribution.', init=TRUE )
+      tableS$setNote( 'normality_sig', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
 
       self$results$ttestParOS$setVisible(isParametric)
       self$results$ttestNonparOS$setVisible(!isParametric)
@@ -63,7 +71,7 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
       tableS       <- self$results$normalityOS
 
       warn_nn_ct   <- 0
-      note_sig_ct  <- 0
+      # note_sig_ct  <- 0
 
       for ( thisx in self$options$xs ) {
         # for all chosen variables, calculate the appropriate test, including Shapiro-Wilks, and add a line to the result table
@@ -96,6 +104,7 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
                                         df       = df,
                                         p        = results$p.value,
                                         mean     = results$estimate,
+                                        mean_mu0 = results$estimate - self$options$mean,
                                         cilower  = results$conf.int[1],
                                         ciupper  = results$conf.int[2]
                                       )
@@ -131,10 +140,10 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
             warn_nn_ct <- warn_nn_ct + 1
           } else {
             # If normality is not violated, possibly add a marker for significant result:
-            if ( results$p.value < 1-self$options$confLevel ) {
-              tableT$addSymbol( rowKey=thisx, col=1, symbol='*' )
-              note_sig_ct <- note_sig_ct + 1
-            }
+            # if ( results$p.value < 1-self$options$confLevel ) {
+            #   tableT$addSymbol( rowKey=thisx, col=1, symbol='*' )
+            #   note_sig_ct <- note_sig_ct + 1
+            # }
           }
         }
 
@@ -157,12 +166,12 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
                                                   ),
                                              init=FALSE
                                            )
-      if ( note_sig_ct > 0 ) tableT$setNote( 'significantNote',
-                                             paste( 'For variables marked * the calculated p-value is smaller than the chosen significance level.',
-                                                    'Therefore we reject the null hypothesis for each variable marked with *.'
-                                                  ),
-                                             init=FALSE
-                                           )
+      # if ( note_sig_ct > 0 ) tableT$setNote( 'significantNote1',
+      #                                        paste( 'For variables marked * the calculated p-value is smaller than the chosen significance level.',
+      #                                               'Therefore we reject the null hypothesis for each variable marked with *.'
+      #                                             ),
+      #                                        init=FALSE
+      #                                      )
 
     } ## end .run
 

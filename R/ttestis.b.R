@@ -1,5 +1,9 @@
 # Implementation of the independent two sample test
 #
+# This file is part of the zTestLFHK jamoovi package.
+#
+# Copyright 2022--2026 Gisbert W. Selke <gwselke@github.com>
+#
 # This implementation is NOT optimized.
 # * It could make use of jamovi's clearWith feature (but it is a bit tricky to get this right for all cases).
 # * Shapiro-Wilks and Levene tests could be cached (per variable), because they are independent of all other settings.
@@ -35,24 +39,35 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                           superTitle = superTitleText,
                           type       = 'number'
                         )
+                        
+        grp <- self$options$group
+        if ( !is.null(grp) ) {
+          grplevels <- levels( self$data[,grp] )
+          tableT$setNote( 'group1', paste( 'Population 1: cases where', grp, 'is', grplevels[1] ), init=TRUE ) 
+          tableT$setNote( 'group2', paste( 'Population 2: cases where', grp, 'is', grplevels[2] ), init=TRUE )
+        }          
 
-        tableT$setNote( 'nullhyp', 'Null hypothesis: the difference of means between the groups in the population is equal to 0', init=TRUE )
+        tableT$setNote( 'testhint', 
+                        paste( "Student's t test assumes equal population variances, Welch's t test does not.", 
+                               "Choose one of them according to the result of the test for homogeneity of variances (see below)."
+                             ), init=TRUE )
+        tableT$setNote( 'nullhyp', 'H<sub>0</sub>: μ<sub>1</sub> = μ<sub>2</sub> (i.e., population means are equal)', init=TRUE )
 
-        descr <- paste( 'Alternative hypothesis: the difference of means between the groups in the population is',
-                        if ( self$options$alternative=='two.sided' ) 'not equal to 0' else paste( self$options$alternative, 'than 0' )
+        descr <- paste( 'H<sub>A</sub>: μ<sub>1</sub>',
+                        if ( self$options$alternative=='two.sided' ) '≠' else if ( self$options$alternative=='less' ) '<' else '>',
+                        'μ<sub>2</sub>'
                       )
         tableT$setNote( 'althyp', descr, init=TRUE )
+        tableT$setNote( 'significance', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
+
       }
 
-      descr <- paste0( 'Null hypothesis (H0): the distributions in the groups have equal variances.\n',
-                       'If the p-value is smaller than the significance level, we reject this H0.'
-                     )
-      tableL$setNote( 'homogeneity', descr, init=TRUE )
+      tableL$setNote( 'homogeneity0', 'H<sub>0</sub>: σ<sub>1</sub><sup>2</sup> = σ<sub>2</sub><sup>2</sup>', init=TRUE )
+      tableL$setNote( 'homogeneity1', 'H<sub>A</sub>: σ<sub>1</sub><sup>2</sup> ≠ σ<sub>2</sub><sup>2</sup>', init=TRUE )
+      tableL$setNote( 'homogeneity2', 'If the p-value is smaller than the significance level, we reject this H0.', init=TRUE )
 
-      descr <- paste0( 'Null hypothesis (H0): the data for each group in the population come from a normal (i.e. Gaussian) distribution.\n',
-                       'If the p-value is smaller than the significance level, we reject this H0.'
-                     )
-      tableS$setNote( 'normality', descr, init=TRUE )
+      tableS$setNote( 'normality0', 'H<sub>0</sub>: the data come from a normal (i.e. Gaussian) distribution.', init=TRUE )
+      tableS$setNote( 'normality1', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
 
       self$results$ttestParIS$setVisible(isParametric)
       self$results$ttestNonparIS$setVisible(!isParametric)
@@ -76,7 +91,6 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
       grp          <- self$options$group
       if ( is.null(grp) ) return( )
-
       grplevels    <- levels( data[,grp] )
       if ( length(grplevels) != 2 ) {
         msg = paste( 'Grouping variable', grp, 'must have exactly 2 different values.',
@@ -96,7 +110,7 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
         x <- jmvcore::toNumeric( data[ data[,grp]==grplevels[1], dep ] )
         y <- jmvcore::toNumeric( data[ data[,grp]==grplevels[2], dep ] )
-        if ( is.factor(x) ) jmvcore::reject( paste( 'Cannot run test on grouping variable', dep ) )
+        if ( is.factor(x) || is.factor(y) ) jmvcore::reject( paste( 'Cannot run test on grouping variable', dep ) )
 
         if (isParametric) {
 
@@ -210,7 +224,6 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                        )
 
         }
-
 
         # Test for normality of either group; maybe add a warning marker to the variable
         resultsSx <- shapiro.test(x)

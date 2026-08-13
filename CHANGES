@@ -2,10 +2,11 @@ Revision History for tTestLFHK
 
 Changes
 -------
-1.1.0  2026-08-04
+1.1.0  2026-08-12
   - Added notes aiding interpretation of significant results.
   - Fixed normality and equal-variances tests to use user-specified confidence
     level instead of fixed 0.95.
+  - Removed markers for significance of results.
 1.0.0  2025-06-26
   - Fixed a bug in calculation of Levene test for independent two-sample t-test
 0.3.3  2022-10-07

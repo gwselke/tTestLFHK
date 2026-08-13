@@ -1,5 +1,9 @@
 # Implementation of the paired sample test
 #
+# This file is part of the zTestLFHK jamoovi package.
+#
+# Copyright 2022--2026 Gisbert W. Selke <gwselke@github.com>
+#
 # This implementation is NOT optimized.
 # * It could make use of jamovi's clearWith feature (but it is a bit tricky to get this right for all cases).
 # * Shapiro-Wilks test could be cached (per variable), because it is independent of all other settings.
@@ -33,18 +37,18 @@ ttestPSClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                           superTitle = superTitleText,
                           type       = 'number'
                         )
-        tableT$setNote( 'nullhyp', 'Null hypothesis: the mean of the differences in the population is equal to 0', init=TRUE )
-
-        descr <- paste( 'Alternative hypothesis: the mean of the differences in the population is',
-                        if ( self$options$alternative=='two.sided' ) 'not equal to 0' else paste( self$options$alternative, 'than 0' )
+                        
+        tableT$setNote( 'nullhyp', 'H<sub>0</sub>: μ<sub>diff</sub> = 0 (i.e., the population mean of the differences is 0', init=TRUE )
+        descr <- paste( 'H<sub>A</sub>: μ<sub>diff</sub>',
+                        if ( self$options$alternative=='two.sided' ) '≠' else if ( self$options$alternative=='less' ) '<' else '>',
+                        '0'
                       )
         tableT$setNote( 'althyp', descr, init=TRUE )
+        tableT$setNote( 'significance', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
       }
 
-      descr <- paste0( 'Null hypothesis (H0): the differences of the pairs come from a normal (i.e. Gaussian) distribution.\n',
-                       'If the p-value is smaller than the significance level, we reject this H0.'
-                     )
-      tableS$setNote( 'normality', descr, init=TRUE )
+      tableS$setNote( 'normality', 'H<sub>0</sub>: the distribution of the pairwise differences is normal (i.e. Gaussian).', init=TRUE )
+      tableS$setNote( 'normality_sig', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
 
       self$results$ttestParPS$setVisible(isParametric)
       self$results$ttestNonparPS$setVisible(!isParametric)
@@ -65,7 +69,7 @@ ttestPSClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       tableS       <- self$results$normalityPS
 
       warn_nn_ct   <- 0
-      note_sig_ct  <- 0
+      # note_sig_ct  <- 0
 
       for ( key in tableT$rowKeys ) {
 
@@ -142,13 +146,13 @@ ttestPSClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
             tableT$addSymbol( rowKey=key, col=1, symbol='\u2021' )
             tableT$addSymbol( rowKey=key, col=2, symbol='\u2021' )
             warn_nn_ct <- warn_nn_ct + 1
-          } else {
-            # If normality is not violated, possibly add a marker for significant result:
-            if ( results$p.value < 1-self$options$confLevel ) {
-              tableT$addSymbol( rowKey=key, col=1, symbol='*' )
-              tableT$addSymbol( rowKey=key, col=2, symbol='*' )
-              note_sig_ct <- note_sig_ct + 1
-            }
+          # } else {
+          #   # If normality is not violated, possibly add a marker for significant result:
+          #   if ( results$p.value < 1-self$options$confLevel ) {
+          #     tableT$addSymbol( rowKey=key, col=1, symbol='*' )
+          #      tableT$addSymbol( rowKey=key, col=2, symbol='*' )
+          #      note_sig_ct <- note_sig_ct + 1
+          #   }
           }
         }
 
@@ -171,12 +175,12 @@ ttestPSClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                                   ),
                                              init=FALSE
                                            )
-      if ( note_sig_ct > 0 ) tableT$setNote( 'significantNote',
-                                             paste( 'For pairs of variables marked * the calculated p-value is smaller than the chosen significance level.',
-                                                    'Therefore we reject the null hypothesis for each variable marked with *.'
-                                                  ),
-                                             init=FALSE
-                                           )
+      # if ( note_sig_ct > 0 ) tableT$setNote( 'significantNote',
+      #                                        paste( 'For pairs of variables marked * the calculated p-value is smaller than the chosen significance level.',
+      #                                               'Therefore we reject the null hypothesis for each variable marked with *.'
+      #                                             ),
+      #                                        init=FALSE
+      #                                      )
 
     } ## end .run
 
