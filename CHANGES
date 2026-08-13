@@ -2,8 +2,8 @@ Revision History for tTestLFHK
 
 Changes
 -------
-1.1.0  2026-08-12
-  - Added notes aiding interpretation of significant results.
+1.1.0  2026-08-13
+  - Added notes aiding interpretation of results.
   - Fixed normality and equal-variances tests to use user-specified confidence
     level instead of fixed 0.95.
   - Removed markers for significance of results.

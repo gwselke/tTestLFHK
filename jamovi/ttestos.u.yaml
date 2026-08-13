@@ -17,18 +17,13 @@ children:
             isTarget: true
   - type: LayoutBox
     margin: large
+    style: inline
     children:
       - type: ComboBox
         name: alternative
-  - type: LayoutBox
-    margin: large
-    style: inline
-    children:
       - type: TextBox
         name: mean
         format: number
-      - type: Label
-        label: Test value = hypothesized population mean (μ<sub>0</sub>)
   - type: LayoutBox
     margin: large
     children:

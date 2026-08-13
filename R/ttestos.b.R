@@ -1,6 +1,6 @@
 # Implementation of the One Sample Test
 #
-# This file is part of the zTestLFHK jamoovi package.
+# This file is part of the tTestLFHK jamoovi package.
 #
 # Copyright 2022--2026 Gisbert W. Selke <gwselke@github.com>
 #
@@ -40,17 +40,23 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
                           superTitle  = superTitleText,
                           type        = 'number'
                         )
-
+        tableT$setNote( 'testvalue', 'Test value = hypothesized population mean (μ<sub>0</sub>)', init=TRUE )
         tableT$setNote( 'nullhyp', paste( 'H<sub>0</sub>: μ =', self$options$mean, '(i.e. the population mean μ is equal to the hypothesized value μ<sub>0</sub>)' ), init=TRUE )
-
-        descr <- paste( 'H<sub>A</sub>:  μ',
-                        if ( self$options$alternative=='two.sided' ) '≠' else if ( self$options$alternative=='less' ) '<' else '>',
-                        self$options$mean
+        tableT$setNote( 'althyp', 
+                        paste( 'H<sub>A</sub>:  μ',
+                               if ( self$options$alternative=='two.sided' ) '≠' else if ( self$options$alternative=='less' ) '<' else '>',
+                               self$options$mean
+                             ), 
+                        init=TRUE  
                       )
-        tableT$setNote( 'althyp', descr, init=TRUE )
         tableT$setNote( 'significance', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
+      } else {
+        tableT$setNote( 'testvalue', 'Test value = hypothesized centre of symmetry of the distribution', init=TRUE )
+        tableT$setNote( 'nullhyp', 
+                        paste0( 'H<sub>0</sub>: The centre of symmetry of the distribution is equal to ', self$options$mean, '.' ), 
+                        init=TRUE 
+                      )
       }
-
       
       tableS$setNote( 'normality', 'H<sub>0</sub>: the data come from a normal (i.e. Gaussian) distribution.', init=TRUE )
       tableS$setNote( 'normality_sig', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
@@ -80,7 +86,6 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
         if ( is.factor(x) ) jmvcore::reject( paste( 'Cannot run test on grouping variable', thisx ) )
 
         if (isParametric) {
-
           # Parametric case: Student's t
           results <- t.test( x           = x,
                              alternative = self$options$alternative,
@@ -110,7 +115,6 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
                                       )
                        )
         } else {
-
           # Non-parametric case: Wilcoxon
           results <- wilcox.test(
                                   x           = x,
@@ -136,7 +140,7 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
         resultsS <- shapiro.test(x)
         if (isParametric) {
           if ( resultsS$p.value < 1-self$options$confLevel ) {
-            tableT$addSymbol( rowKey=thisx, col=1, symbol='\u2021' )
+            tableT$addSymbol( rowKey=thisx, col=1, symbol='‡' )
             warn_nn_ct <- warn_nn_ct + 1
           } else {
             # If normality is not violated, possibly add a marker for significant result:
@@ -161,7 +165,7 @@ ttestOSClass <- if ( requireNamespace('jmvcore', quietly=TRUE) ) R6::R6Class(
       }
 
       if ( warn_nn_ct > 0  ) tableT$setNote( 'normalWarning',
-                                             paste( 'For variables marked \u2021 the assumption of normality may be violated.',
+                                             paste( 'For variables marked ‡ the assumption of normality may be violated.',
                                                     'Recommendation: use a nonparametric test (One Sample Wilcoxon Test).'
                                                   ),
                                              init=FALSE

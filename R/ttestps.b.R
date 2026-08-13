@@ -37,15 +37,25 @@ ttestPSClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                           superTitle = superTitleText,
                           type       = 'number'
                         )
-                        
-        tableT$setNote( 'nullhyp', 'H<sub>0</sub>: μ<sub>diff</sub> = 0 (i.e., the population mean of the differences is 0', init=TRUE )
-        descr <- paste( 'H<sub>A</sub>: μ<sub>diff</sub>',
-                        if ( self$options$alternative=='two.sided' ) '≠' else if ( self$options$alternative=='less' ) '<' else '>',
-                        '0'
-                      )
-        tableT$setNote( 'althyp', descr, init=TRUE )
-        tableT$setNote( 'significance', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
       }
+      
+      tableT$setNote( 'value_desc', 'Values of the left variable are denoted as Measurement 1, and values of the right variable are denoted as Measurement 2.', init=TRUE )
+      
+      if (isParametric) {        
+        tableT$setNote( 'diff_desc', 'diff (i.e., difference) = value of left variable - value of right variable', init=TRUE )
+        tableT$setNote( 'nullhyp', 'H<sub>0</sub>: μ<sub>diff</sub> = 0 (i.e., the population mean of the differences between paired values is 0.)', init=TRUE )
+        tableT$setNote( 'althyp', 
+                        paste( 'H<sub>A</sub>: μ<sub>diff</sub>',
+                               if ( self$options$alternative=='two.sided' ) '≠' else if ( self$options$alternative=='less' ) '<' else '>',
+                               '0'
+                              ), 
+                        init=TRUE 
+                      )
+      } else {
+        tableT$setNote( 'diff_desc', 'difference = value of left variable - value of right variable', init=TRUE )
+        tableT$setNote( 'nullhyp', 'H<sub>0</sub>: The centre of symmetry of the distribution of differences between paired values is 0.', init=TRUE )
+      }
+      tableT$setNote( 'significance', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
 
       tableS$setNote( 'normality', 'H<sub>0</sub>: the distribution of the pairwise differences is normal (i.e. Gaussian).', init=TRUE )
       tableS$setNote( 'normality_sig', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
@@ -143,8 +153,8 @@ ttestPSClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
         resultsS <- shapiro.test(x-y)
         if (isParametric) {
           if ( resultsS$p.value < 1-self$options$confLevel ) {
-            tableT$addSymbol( rowKey=key, col=1, symbol='\u2021' )
-            tableT$addSymbol( rowKey=key, col=2, symbol='\u2021' )
+            tableT$addSymbol( rowKey=key, col=1, symbol='‡' )
+            tableT$addSymbol( rowKey=key, col=2, symbol='‡' )
             warn_nn_ct <- warn_nn_ct + 1
           # } else {
           #   # If normality is not violated, possibly add a marker for significant result:
@@ -170,7 +180,7 @@ ttestPSClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       }
 
       if ( warn_nn_ct > 0  ) tableT$setNote( 'normalWarning',
-                                             paste( 'For pairs of variables marked \u2021 the assumption of normality of the differences may be violated.',
+                                             paste( 'For pairs of variables marked ‡ the assumption of normality of the differences may be violated.',
                                                     'Recommendation: use a nonparametric test (Wilcoxon Signed Rank Test).'
                                                   ),
                                              init=FALSE

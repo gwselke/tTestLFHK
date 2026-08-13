@@ -1,6 +1,6 @@
 # Implementation of the independent two sample test
 #
-# This file is part of the zTestLFHK jamoovi package.
+# This file is part of the tTestLFHK jamoovi package.
 #
 # Copyright 2022--2026 Gisbert W. Selke <gwselke@github.com>
 #
@@ -39,32 +39,47 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                           superTitle = superTitleText,
                           type       = 'number'
                         )
-                        
-        grp <- self$options$group
-        if ( !is.null(grp) ) {
-          grplevels <- levels( self$data[,grp] )
-          tableT$setNote( 'group1', paste( 'Population 1: cases where', grp, 'is', grplevels[1] ), init=TRUE ) 
-          tableT$setNote( 'group2', paste( 'Population 2: cases where', grp, 'is', grplevels[2] ), init=TRUE )
-        }          
-
-        tableT$setNote( 'testhint', 
-                        paste( "Student's t test assumes equal population variances, Welch's t test does not.", 
-                               "Choose one of them according to the result of the test for homogeneity of variances (see below)."
-                             ), init=TRUE )
-        tableT$setNote( 'nullhyp', 'H<sub>0</sub>: μ<sub>1</sub> = μ<sub>2</sub> (i.e., population means are equal)', init=TRUE )
-
-        descr <- paste( 'H<sub>A</sub>: μ<sub>1</sub>',
-                        if ( self$options$alternative=='two.sided' ) '≠' else if ( self$options$alternative=='less' ) '<' else '>',
-                        'μ<sub>2</sub>'
+        tableT$setNote( 'testhint',
+                        paste( "Student's t test assumes equal population variances, Welch's t test does not.",
+                               "Choose one of them according to the result of the test for homogeneity of variances (see Levene's test below)."
+                             ), 
+                        init=TRUE 
                       )
-        tableT$setNote( 'althyp', descr, init=TRUE )
-        tableT$setNote( 'significance', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
-
+      }
+                      
+      grp <- self$options$group
+      if ( !is.null(grp) ) {
+        grplevels <- levels( self$data[,grp] )
+        for (i in 1:2) {
+          tableT$setNote( paste0( 'group', i ), 
+                          paste0( 'Population denoted as Group ', i, ': all cases where ', grp, ' is ', grplevels[i] ), 
+                          init=TRUE 
+                        )
+        }
       }
 
-      tableL$setNote( 'homogeneity0', 'H<sub>0</sub>: σ<sub>1</sub><sup>2</sup> = σ<sub>2</sub><sup>2</sup>', init=TRUE )
+      if (isParametric) {
+        tableT$setNote( 'nullhyp', 'H<sub>0</sub>: μ<sub>1</sub> = μ<sub>2</sub> (i.e., population means are equal)', init=TRUE )
+        tableT$setNote( 'althyp', 
+                        paste( 'H<sub>A</sub>: μ<sub>1</sub>',
+                               if ( self$options$alternative=='two.sided' ) '≠' else if ( self$options$alternative=='less' ) '<' else '>',
+                               'μ<sub>2</sub>'
+                             ), 
+                        init=TRUE 
+                      )
+      } else {
+        tableT$setNote( 'nullhyp', 'H<sub>0</sub>: the two groups come from the same distribution.', init=TRUE )
+      }
+      tableT$setNote( 'significance', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
+
+      tableL$setNote( 'homogeneity0', 
+                      paste( 'H<sub>0</sub>: σ<sub>1</sub><sup>2</sup> = σ<sub>2</sub><sup>2</sup>',
+                             '(i.e., population variances are equal)'
+                           ), 
+                      init=TRUE 
+                    )
       tableL$setNote( 'homogeneity1', 'H<sub>A</sub>: σ<sub>1</sub><sup>2</sup> ≠ σ<sub>2</sub><sup>2</sup>', init=TRUE )
-      tableL$setNote( 'homogeneity2', 'If the p-value is smaller than the significance level, we reject this H0.', init=TRUE )
+      tableL$setNote( 'homogeneity2', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
 
       tableS$setNote( 'normality0', 'H<sub>0</sub>: the data come from a normal (i.e. Gaussian) distribution.', init=TRUE )
       tableS$setNote( 'normality1', 'If the p-value is smaller than the significance level, we reject H<sub>0</sub>.', init=TRUE )
@@ -194,7 +209,7 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
                                   )
                        )
           if ( resultsL$'Pr(>F)'[1] < 1-self$options$confLevel ) {
-            tableT$addSymbol( rowNo=saveRowTNo, col=1, symbol='\u2020' )
+            tableT$addSymbol( rowNo=saveRowTNo, col=1, symbol='†' )
             warn_var_ct <- warn_var_ct + 1
           }
 
@@ -231,7 +246,7 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
 
         if (isParametric) {
           if ( ( resultsSx$p.value < 1-self$options$confLevel ) || ( resultsSy$p.value < 1-self$options$confLevel ) ) {
-            tableT$addSymbol( rowNo=rowTNo-1, col=1, symbol='\u2021' )
+            tableT$addSymbol( rowNo=rowTNo-1, col=1, symbol='‡' )
             warn_nn_ct <- warn_nn_ct + 1
           }
         }
@@ -262,11 +277,11 @@ ttestISClass <- if (requireNamespace('jmvcore', quietly=TRUE)) R6::R6Class(
       }
 
       if ( warn_nn_ct > 0  ) tableT$setNote( 'normalWarning',
-                                             'For variables marked \u2021 the assumption of normality may be violated for at least one of the groups.',
+                                             'For variables marked ‡ the assumption of normality may be violated for at least one of the groups.',
                                              init=FALSE
                                            )
       if ( warn_var_ct > 0 ) tableT$setNote( 'varianceWarning',
-                                             'For variables marked \u2020 the assumption of equal variances for the groups may be violated.',
+                                             'For variables marked † the assumption of equal variances for the groups may be violated.',
                                              init=FALSE
                                            )
 
